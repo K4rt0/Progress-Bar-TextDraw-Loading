@@ -25,6 +25,12 @@ hook OnGameModeInit()
 	TextDrawSetShadow(TD_ProgressBar_Global, 0);
 }
 
+hook OnPlayerDeath(playerid, killerid, reason)
+{
+	ResetVariable_ProgressBar(playerid);
+	return 1;
+}
+
 stock ProgressBar_Create(playerid, steps, const text[])
 {
 	for(new i = 0; i < 2; i++)
@@ -67,16 +73,28 @@ stock ProgressBar_Create(playerid, steps, const text[])
 	return 1;
 }
 
+stock IsValidProgressBar(playerid)
+{
+	if(GetPVarInt(playerid, "ProgressBar_Timer")) return 1;
+	return 0;
+}
+
+stock ResetVariable_ProgressBar(playerid)
+{
+	KillTimer(GetPVarInt(playerid, "ProgressBar_Timer"));
+	DeletePVar(playerid, "ProgressBar_Timer");
+	DeletePVar(playerid, "ProgressBar_X");
+	DeletePVar(playerid, "ProgressBar_Text");
+	return 1;
+}
+
 forward ProgressBar_Loading(playerid, stockid, steps);
 public ProgressBar_Loading(playerid, stockid, steps)
 {
 	new Float:Chart_X = GetPVarFloat(playerid, "ProgressBar_X");
 	if(Chart_X == 204.479187)
 	{
-		KillTimer(GetPVarInt(playerid, "ProgressBar_Timer"));
-		DeletePVar(playerid, "ProgressBar_Timer");
-		DeletePVar(playerid, "ProgressBar_X");
-		DeletePVar(playerid, "ProgressBar_Text");
+		ResetVariable_ProgressBar(playerid);
 		TextDrawHideForPlayer(playerid, TD_ProgressBar_Global);
 		PlayerTextDrawHide(playerid, TD_ProgressBar_Player[playerid][0]);
 		PlayerTextDrawHide(playerid, TD_ProgressBar_Player[playerid][1]);
@@ -99,10 +117,4 @@ public ProgressBar_Loading(playerid, stockid, steps)
 	KillTimer(GetPVarInt(playerid, "ProgressBar_Timer"));
 	SetPVarInt(playerid, "ProgressBar_Timer", SetTimerEx("ProgressBar_Loading", 100, false, "iii", playerid, stockid, steps));
 	return 1;
-}
-
-stock IsValidProgressBar(playerid)
-{
-	if(GetPVarInt(playerid, "ProgressBar_Timer")) return 1;
-	return 0;
 }
