@@ -100,3 +100,9 @@ public ProgressBar_Loading(playerid, stockid, steps)
 	SetPVarInt(playerid, "ProgressBar_Timer", SetTimerEx("ProgressBar_Loading", 100, false, "iii", playerid, stockid, steps));
 	return 1;
 }
+
+stock IsValidProgressBar(playerid)
+{
+	if(GetPVarInt(playerid, "ProgressBar_Timer")) return 1;
+	return 0;
+}
