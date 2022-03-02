@@ -34,5 +34,5 @@ CMD:checkprogressbar(playerid)
 # Note
 ```
 steps = speed
-If you use IsValidProgressBar(playerid) and it return to 1, it will be valid. But if it return to 0, it will be invalid.
+During you use IsValidProgressBar(playerid) if it returns 1 then progress bar valid and return 0 then progress bar not valid.
 ```
